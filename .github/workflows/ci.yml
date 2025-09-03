@@ -1,0 +1,49 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  lint-and-smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install -r requirements-dev.txt
+
+      - name: Lint (ruff)
+        run: ruff check .
+
+      - name: Format check (black)
+        run: black --check .
+
+      - name: Smoke import
+        run: |
+          python - <<'PY'
+          import importlib
+          for m in [
+            'main', 'server',
+            'agents.orchestrator_agent',
+            'agents.interviewer_agent',
+            'agents.evaluator_agent',
+            'agents.hints_agent',
+            'agents.topic_manager_agent',
+            'tools.llm_client',
+            'models', 'parsers', 'utils.config'
+          ]:
+              importlib.import_module(m)
+          print('Smoke import OK')
+          PY
