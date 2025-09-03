@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF--8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Multi-Agent Interview</title>
+		<link rel="stylesheet" href="styles/main.css" />
+	</head>
+	<body>
+		<div class="container">
+			<aside class="sidebar">
+				<div class="sidebar-header">
+					<h2>Interview Sessions</h2>
+					<button id="new-session-btn" class="btn">+</button>
+				</div>
+				<div id="session-list" class="session-list">
+					<!-- Session history will be populated here -->
+				</div>
+			</aside>
+			<main class="chat-interface">
+				<div id="chat-messages" class="chat-messages">
+					<div class="message welcome-message">
+						<p class="sender">System</p>
+						<p>
+							Welcome to your technical interview. Please upload your resume and
+							the job description to begin.
+						</p>
+					</div>
+					<!-- Messages will be appended here -->
+				</div>
+				<div class="chat-input">
+					<div class="file-inputs">
+						<label for="resume-upload" class="file-label">
+							<span id="resume-file-name">Resume</span>
+						</label>
+						<input
+							type="file"
+							id="resume-upload"
+							class="file-upload"
+							accept=".txt"
+						/>
+						<label for="jd-upload" class="file-label">
+							<span id="jd-file-name">Job Description</span>
+						</label>
+						<input
+							type="file"
+							id="jd-upload"
+							class="file-upload"
+							accept=".txt"
+						/>
+					</div>
+					<div class="message-input">
+						<textarea
+							id="message-input"
+							placeholder="Type your answer..."
+							rows="1"
+						></textarea>
+						<button id="send-btn" class="send-btn">
+							<svg
+								xmlns="http://www.w3.org/2000/svg"
+								viewBox="0 0 24 24"
+								fill="currentColor"
+								class="icon"
+							>
+								<path
+									d="M3.478 2.405a.75.75 0 00-.926.94l2.432 7.905H13.5a.75.75 0 010 1.5H4.984l-2.432 7.905a.75.75 0 00.926.94 60.519 60.519 0 0018.445-8.986.75.75 0 000-1.218A60.517 60.517 0 003.478 2.405z"
+								/>
+							</svg>
+						</button>
+					</div>
+				</div>
+			</main>
+		</div>
+
+		<script src="main.js"></script>
+	</body>
+</html>
+
+

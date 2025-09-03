@@ -1,0 +1,8 @@
+﻿Focus on multi-agent systems and coordination patterns.
+Prioritize working agent communication over perfect architecture.
+Default to simple message passing between agents.
+Use clear agent roles and responsibilities.
+When building agents, focus on: task breakdown, agent coordination, result synthesis.
+Prefer async/await patterns for agent communication.
+Include basic error handling and agent state management.
+

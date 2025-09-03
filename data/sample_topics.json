@@ -1,0 +1,13 @@
+[
+  {"name": "Python", "description": "Language, libraries, testing", "tags": ["python"], "max_depth": 3},
+  {"name": "System Design", "description": "Architecture and tradeoffs", "tags": ["system_design"], "max_depth": 3},
+  {"name": "Distributed Systems", "description": "Consistency, scaling, resilience", "tags": ["distributed"], "max_depth": 3},
+  {"name": "Cloud/DevOps", "description": "AWS, Docker, infra ops", "tags": ["cloud", "devops"], "max_depth": 2}
+]
+
+
+
+
+
+
+

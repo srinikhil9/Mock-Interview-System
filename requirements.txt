@@ -1,0 +1,10 @@
+﻿fastapi
+uvicorn
+python-dotenv
+openai
+tiktoken
+# For fuzzy topic matching
+thefuzz
+# For file uploads
+python-multipart
+
