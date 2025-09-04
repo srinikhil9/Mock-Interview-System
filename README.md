@@ -118,3 +118,5 @@ Inspired by multi‑agent coordination patterns and practical interview coaching
 
 ## Status
 Docs and CI configured.
+
+_Internal: push verification commit._
