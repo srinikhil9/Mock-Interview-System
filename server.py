@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import os
 from typing import Dict, Optional, List
+import time
 
 from fastapi import FastAPI, HTTPException, File, UploadFile, Form
 from fastapi.staticfiles import StaticFiles
@@ -12,6 +13,7 @@ from utils.logging import setup_logging
 from parsers import parse_resume, parse_job_description, load_topics
 from models import AgentMessage, MessageType, InterviewSession
 from agents.orchestrator_agent import OrchestratorAgent
+from tools.export import session_to_dict
 
 
 app = FastAPI()
@@ -24,6 +26,7 @@ app.add_middleware(
 )
 
 setup_logging("INFO")
+app.state.start_time = time.time()
 
 
 class CreateSessionResp(BaseModel):
@@ -60,6 +63,25 @@ class AnswerResp(BaseModel):
     current_topic: str
 
 
+class HealthResp(BaseModel):
+    status: str
+    uptime_seconds: float
+    sessions: int
+
+
+class VersionResp(BaseModel):
+    version: str
+    api: str
+
+
+class SessionSummaryResp(BaseModel):
+    session_id: str
+    num_questions: int
+    avg_score: float
+    current_topic: str
+    finished: bool
+
+
 # session_id -> {"session": InterviewSession, "orch": OrchestratorAgent, "pending_question": Optional[str]}
 SESSIONS: Dict[str, Dict[str, object]] = {}
 
@@ -69,6 +91,21 @@ def _ensure_session(sid: str) -> Dict[str, object]:
     if not s:
         raise HTTPException(status_code=404, detail="session not found")
     return s
+
+
+@app.get("/health", response_model=HealthResp)
+async def health() -> HealthResp:
+    return HealthResp(
+        status="ok",
+        uptime_seconds=round(time.time() - app.state.start_time, 3),
+        sessions=len(SESSIONS),
+    )
+
+
+@app.get("/version", response_model=VersionResp)
+async def version() -> VersionResp:
+    # Lightweight static version; adjust as needed
+    return VersionResp(version="0.1.0", api="v1")
 
 
 @app.post("/api/session", response_model=CreateSessionResp)
@@ -226,6 +263,29 @@ async def submit_answer(req: AnswerReq):
         hint=hint_text,
         topic_action=action,
         current_topic=(new_cur.topic.name if new_cur else "Finished"),
+    )
+
+
+@app.get("/api/export/{session_id}")
+async def export_session(session_id: str):
+    store = _ensure_session(session_id)
+    session: InterviewSession = store["session"]  # type: ignore[assignment]
+    return session_to_dict(session)
+
+
+@app.get("/api/sessions/{session_id}", response_model=SessionSummaryResp)
+async def get_session_summary(session_id: str) -> SessionSummaryResp:
+    store = _ensure_session(session_id)
+    session: InterviewSession = store["session"]  # type: ignore[assignment]
+    scores = [i.evaluation.score for i in session.interactions if i.evaluation]
+    avg = (sum(scores) / len(scores)) if scores else 0.0
+    cur = session.topic_plan.current()
+    return SessionSummaryResp(
+        session_id=session.session_id,
+        num_questions=len(session.interactions),
+        avg_score=round(avg, 2),
+        current_topic=(cur.topic.name if cur else "Finished"),
+        finished=(session.ended_at is not None or session.topic_plan.is_finished()),
     )
 
 

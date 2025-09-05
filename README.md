@@ -114,9 +114,14 @@ MIT. See `LICENSE`.
 ## Acknowledgements
 Inspired by multi‑agent coordination patterns and practical interview coaching workflows.
 
-
+## API (server)
+- `GET /health` → `{ status, uptime_seconds, sessions }`
+- `GET /version` → `{ version, api }`
+- `POST /api/session` (multipart: resume, jd) → create a session
+- `POST /api/next` → next question for a session
+- `POST /api/answer` → evaluate an answer and progress topic
+- `GET /api/sessions/{session_id}` → quick summary
+- `GET /api/export/{session_id}` → full session JSON
 
 ## Status
 Docs and CI configured.
-
-_Internal: push verification commit._
