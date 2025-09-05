@@ -115,3 +115,6 @@ MIT. See `LICENSE`.
 Inspired by multi‑agent coordination patterns and practical interview coaching workflows.
 
 
+
+## Status
+Docs and CI configured.
